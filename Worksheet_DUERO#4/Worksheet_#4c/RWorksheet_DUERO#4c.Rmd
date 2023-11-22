@@ -1,0 +1,22 @@
+---
+title: "RWorksheet_DUERO#4c"
+author: "Nicole Duero BSIT 2-B"
+date: "2023-11-22"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+data(mpg)
+```
+```{r}
+library(readr)
+csv.file<-"mpg.csv"
+mpgData<-read.csv("mpg.csv")
+mpgData
+
+```

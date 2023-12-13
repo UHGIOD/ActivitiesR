@@ -1,0 +1,194 @@
+---
+title: "RWorksheet_5"
+author: "Nicole Duero BSIT 2-B"
+date: "2023-12-13"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
+```
+```{r}
+#1. Create a data frame for the table below. Show your solution.
+
+StudentData<- data.frame (
+  Students = c(1,2,3,4,5,6,7,8,9,10),
+  preTest =  c(55,54,47,57,51,61,57,54,63,58),
+  postTest = c(61,60,56,63,56,63,59,56,62,61)
+)
+```
+```{r}
+#a. Compute the descriptive statistics using different packages (Hmisc and pastecs).Write the codes and its   result
+
+        #install.packages("Hmisc")
+        library(Hmisc)
+        #install.packages("pastecs")
+        library(pastecs)
+
+        stats_Hmisc<-describe(StudentData)
+        stats_pastecs <- stat.desc(StudentData)
+        
+```
+```{r}
+#2. The Department of Agriculture was studying the effects of several levels of a fertilizer on the growth of a plant. For some analyses, it might be useful to convert the fertilizer levels to an ordered factor.
+
+      #a. Write the codes and describe the result.
+      fertilizeData <- c(10,10,10, 20,20,50,10,20,10,50,20,50,20,10)
+      ordered(fertilizeData)
+      #RESULT: The data 'fertilizeData' shows the ordered data of the said dataset.
+
+```
+```{r}
+#3. Abdul Hassan, president of Floor Coverings Unlimited, has asked you to study the ex-ercise levels undertaken by 10 subjects were “l”, “n”, “n”, “i”, “l” , “l”, “n”,“n”, “i”, “l” ; n=none, l=light, i=intense.
+
+      # a. What is the best way to represent this in R?
+
+      LevelExcers<- c("l", "n", "n", "i", "l", "l", "n", "n", "i", "l")
+      FactorExcers <- factor(LevelExcers, levels = c("n", "l", "i"), labels = c("none", "light", "intense"))
+      FactorExcers
+```
+```{r}
+# 4. Sample of 30 tax accountants from all the states and territories of Australia and their individual state of origin is specified by a character vector of state mnemonics as:
+states_Australia <- c("tas", "sa", "qld", "nsw", "nsw", "nt", "wa", "wa", "qld",
+           "vic", "nsw", "vic", "qld", "qld", "sa", "tas", "sa", "nt",
+           "wa", "vic", "qld", "nsw", "nsw", "wa", "sa", "act", "nsw",
+           "vic", "vic", "act")
+
+      #a. Apply the factor function and factor level. Describe the results.
+      factorLevel<-factor(states_Australia, levels = c("act", "nsw", "nt", "qld", "sa", "tas", "vic", "wa") )  
+      factorLevel
+      #DESCRIPTION: the 'factorLevel' object result is factor with level.
+```
+```{r}
+# 5. From #4 - continuation:
+# • Suppose we have the incomes of the same tax accountants in another vector (in suitably large units of money)
+
+same_incomes <- c(60, 49, 40, 61, 64, 60, 59, 54,
+             62, 69, 70, 42, 56, 61, 61, 61, 58, 51, 48,
+             65, 49, 49, 41, 48, 52, 46, 59, 46, 58, 43)
+
+      # a. Calculate the sample mean income for each state we can now use the special function tapply():
+      sincome_means <- tapply(same_incomes, factorLevel, mean)
+      sincome_means
+
+      # b. Copy the results and interpret.
+      #RESULT: 
+      #INTERPRET: By using the tapply() function, the result has the means of each states that has a factor with levels.
+      # act      nsw       nt      qld       sa      tas      vic       wa 
+      #44.50000 57.33333 55.50000 53.60000 55.00000 60.50000 56.00000 52.25000
+
+```
+```{r}
+#6. Calculate the standard errors of the state income means (refer again to number 3) 
+#stdError <- function(x) sqrt(var(x)/length(x)) Note: After this assignment, the standard errors are calculated by: incster <- tapply(incomes, statef, stdError)
+
+      #a. What is the standard error? Write the codes.
+      stdError <- function(x) sqrt(var(x)/length(x))
+      std_sincome<- tapply(same_incomes,factorLevel,stdError)
+      std_sincome
+
+      #b. Interpret the result.
+      #ANSWER: It shows the calculated standard errors of the state income means. If the standard error of the state   income mean is relatively small, it means that the sample mean income is a relatively precise estimate of the true population mean income for that state. If the standard error is large, it suggests more variability in the sample mean, and less precision in estimating the true population mean.
+
+```
+```{r}
+#7. Use the titanic dataset.
+
+      #a. subset the titatic dataset of those who survived and not survived. Show the codes and its result.
+      library(datasets)
+      data(Titanic)
+      str(Titanic)
+      View(Titanic)
+
+      Titanic<-as.data.frame(Titanic)
+
+      survived_data<-subset(Titanic, Survived=="Yes")
+      survived_data
+      not_survived_data <- subset(Titanic, Survived == "No")
+      not_survived_data
+```
+```{r}
+#8. The data sets are about the breast cancer Wisconsin. The samples arrive periodically as Dr. Wolberg reports his clinical cases. The database therefore reflects this.
+library(readr)
+csv.file<-"breastcancer_wisconsin.csv"
+breastcancer_wisconsin<-read.csv("breastcancer_wisconsin.csv")
+breastcancer_wisconsin
+summary(breastcancer_wisconsin)
+
+    #a. describe what is the dataset all about.
+    #ANSWER: The dataset 'breastcancer_wisconsin' is a database of clinical reports of the cases. It states here the identification number, where there are different categories of how malignant the breast cancer is. It is compute by numbers, where they range to 1-10.  
+
+```
+```{r}
+#d. Compute the descriptive statistics using different packages. Find the values of:
+    #d.1 Standard error of the mean for clump thickness.
+    #Statistics/Packages used: stdError function
+    clump_thickness_data <- breastcancer_wisconsin$clump_thickness
+    std_error_clump_thickness <- stdError(clump_thickness_data)
+    std_error_clump_thickness
+```
+```{r}
+#d.2 Coefficient of variability for Marginal Adhesion.
+    #Statistics/Packages used: Using mean and standard deviation to get the Coefficient of Variation. 
+    marginal_adhesion_data <- breastcancer_wisconsin$marginal_adhesion
+    meanMA <- mean(marginal_adhesion_data)
+    standardDevMA <- sd(marginal_adhesion_data)
+    CoeffVarMA <- standardDevMA / meanMA
+    CoeffVarMA
+    CoeffVarMA<-CoeffVarMA*100 #Getting the percentage
+    CoeffVarMA
+```
+```{r}
+ #d.3 Number of null values of Bare Nuclei.
+    bare_nuclei_data <- breastcancer_wisconsin$bare_nucleoli
+    nullValNuclei <- sum(is.na(bare_nuclei_data))
+    nullValNuclei
+```
+```{r}
+#d.4 Mean and standard deviation for Bland Chromatin
+    #Statistics/Packages used:mean and standard deviation
+    BlandChromatin <- breastcancer_wisconsin$bland_chromatin
+    meanBC <- mean(BlandChromatin)
+    sdBC <- sd(BlandChromatin)
+    meanBC
+    sdBC
+```
+```{r}
+#d.5 Confidence interval of the mean for Uniformity of Cell Shape
+    #Using t.test function
+    uniformity_cell_shape_data <- breastcancer_wisconsin$shape_uniformity
+    confidence_interval <- t.test(uniformity_cell_shape_data, na.rm = TRUE)$conf.int
+    confidence_interval
+```
+```{r}
+#d. How many attributes?
+    length(breastcancer_wisconsin)
+    names(breastcancer_wisconsin)
+```
+```{r}
+#e. Find the percentage of respondents who are malignant. Interpret the results
+str(breastcancer_wisconsin)
+View(breastcancer_wisconsin)
+malignantData <- sum(breastcancer_wisconsin$class == 4) / nrow(breastcancer_wisconsin) * 100
+malignantData
+#INTERPRET: Based on the class data belonged to the breastcancer data, class 4 is considered to be malignant as if it is in class 4, some categories (e.g "clump_thickness"   "size_uniformity"   "shape_uniformity"  "marginal_adhesion" "epithelial_size" "bare_nucleoli"  "bland_chromatin"   "normal_nucleoli"   "mitoses"  ) are far more higher than the class 2. The higher the class, the higher the rate of the categories and vice versa. 
+```
+```{r}
+#9. Export the data abalone to the Microsoft excel file. Copy the codes.
+  #install.packages("AppliedPredictiveModeling")
+library("AppliedPredictiveModeling")
+data("abalone")
+View(abalone)
+head(abalone)
+summary(abalone)
+
+getwd()  
+Abalone_excel<-"C:/Users/User/Documents/Rstudio Files/AbaloneData.xlsx"
+#install.packages("writexl")
+library(writexl)
+
+write_xlsx(abalone, Abalone_excel)
+```
